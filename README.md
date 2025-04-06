@@ -7,8 +7,8 @@ The Descriptions library lets you generate test appropriate instances of your ob
 
 ## Usage
 Suppose we start with the following Kotlin class we wish to test...
-`
-    class PackageTracker(val sent: LocalDate = LocalDate.now()) {
+```
+class PackageTracker(val sent: LocalDate = LocalDate.now()) {
     var expectedArrivalDate: LocalDate? = null
     var expectedMaxStops = 0
     var totalStops = 0
@@ -56,12 +56,12 @@ Suppose we start with the following Kotlin class we wish to test...
         }
     }
 }
-`
+```
 
 ...we can use the Descriptions library to create an object describing the kind of `PackageTracker` we want to test...
 
-`
-    class PackageTrackerDescription: ObjectDescription<PackageTracker>() {
+```
+class PackageTrackerDescription: ObjectDescription<PackageTracker>() {
     val sentDate = DateFieldDescription(LocalDate.now(), UnlimitedDate)
     val expectedArrivalDate = DateFieldDescription(LocalDate.now(), UnlimitedDate)
     val totalStops = IntFieldDescription(3, IntLimitsDescription(0, 100))
@@ -85,41 +85,41 @@ Suppose we start with the following Kotlin class we wish to test...
             throw InappropriateDescriptionException("Neither sentDate nor expectedMaxStops nor totalStops may be null.")
         }
 }
-`
+```
 
 The block of code below will go through all ttpes of Date field test cases the Descriptions library knows about...
 
-`
-            DateFieldTargets.values().forEach {
-            reset(testDataGenerator)
-            testDataGenerator.sentDate.target = it
+```
+DateFieldTargets.values().forEach {
+    reset(testDataGenerator)
+    testDataGenerator.sentDate.target = it
 
-            try {
-                val testData = testDataGenerator.describedObject
-                producedTests.add(PackageTrackerTest(
-                        "PackageTracker: Sent Date ${it.toString()}",
-                        "This test will show you what the candidate PackageTracker looks like and see if the verify() function throws an exception.",
-                        "DES-03${subname.currentSubname}",
-                        testData))
-            } catch (dontCare: Throwable) {
-                // Silently ignore inappropriate test cases
-            }
+    try {
+        val testData = testDataGenerator.describedObject
+        producedTests.add(PackageTrackerTest(
+                "PackageTracker: Sent Date ${it.toString()}",
+                "This test will show you what the candidate PackageTracker looks like and see if the verify() function throws an exception.",
+                "DES-03${subname.currentSubname}",
+                testData))
+    } catch (dontCare: Throwable) {
+        // Silently ignore inappropriate test cases
+    }
 
-            reset(testDataGenerator)
-            testDataGenerator.expectedArrivalDate.target = it
+    reset(testDataGenerator)
+    testDataGenerator.expectedArrivalDate.target = it
 
-            try {
-                val testData = testDataGenerator.describedObject
-                producedTests.add(PackageTrackerTest(
-                        "PackageTracker: Expected Arrival Date ${it.toString()}",
-                        "This test will show you what the candidate PackageTracker looks like and see if the verify() function throws an exception.",
-                        "DES-04${subname.nextSubname}",
-                        testData))
-            } catch (dontCare: Throwable) {
-                // Silently ignore inappropriate test cases
-            }
-        }
-`
+    try {
+        val testData = testDataGenerator.describedObject
+        producedTests.add(PackageTrackerTest(
+                "PackageTracker: Expected Arrival Date ${it.toString()}",
+                "This test will show you what the candidate PackageTracker looks like and see if the verify() function throws an exception.",
+                "DES-04${subname.nextSubname}",
+                testData))
+    } catch (dontCare: Throwable) {
+        // Silently ignore inappropriate test cases
+    }
+}
+```
 
 The complete list: *DEFAULT, NULL, HAPPY_PATH, EXPLICIT, MAXIMUM_POSSIBLE_VALUE, RANDOM_WITHIN_LIMITS, SLIGHTLY_BELOW_MAXIMUM, SLIGHTLY_ABOVE_MINIMUM, MINIMUM_POSSIBLE_VALUE, WELL_BEYOND_UPPER_LIMIT, SLIGHTLY_BEYOND_UPPER_LIMIT, AT_UPPER_LIMIT, SLIGHTLY_WITHIN_UPPER_LIMIT, WELL_WITHIN_UPPER_LIMIT, WELL_IN_FUTURE, SLIGHTLY_IN_FUTURE, AT_PRESENT, SLIGHTLY_IN_PAST, WELL_IN_PAST, WELL_BEYOND_LOWER_LIMIT, SLIGHTLY_BEYOND_LOWER_LIMIT, AT_LOWER_LIMIT, SLIGHTLY_WITHIN_LOWER_LIMIT, WELL_WITHIN_LOWER_LIMIT, FIVE_DIGIT_YEAR, FOUR_DIGIT_YEAR, THREE_DIGIT_YEAR, TWO_DIGIT_YEAR, SINGLE_DIGIT_YEAR, TWO_DIGIT_MONTH, SINGLE_DIGIT_MONTH, TWO_DIGIT_DAY, SINGLE_DIGIT_DAY, SINGLE_DIGIT_MONTH_AND_DAY*
 
